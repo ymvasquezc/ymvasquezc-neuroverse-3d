@@ -1,0 +1,21 @@
+/* Tokens de diseño — estética científica futurista. */
+:root {
+  --nv-bg-0: #05070f;
+  --nv-bg-1: #0a0f1e;
+  --nv-bg-2: #10182e;
+  --nv-panel: rgba(16, 24, 46, 0.72);
+  --nv-panel-border: rgba(94, 160, 255, 0.25);
+  --nv-accent: #4fd1ff;
+  --nv-accent-2: #b388ff;
+  --nv-text: #e7eefc;
+  --nv-text-dim: #9fb0d0;
+  --nv-warn: #ffd54f;
+  --nv-danger: #ff6b8b;
+
+  --nv-radius: 12px;
+  --nv-radius-sm: 8px;
+  --nv-gap: 16px;
+  --nv-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
+  --nv-font: 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  --nv-font-mono: 'SFMono-Regular', ui-monospace, 'Cascadia Code', monospace;
+}
