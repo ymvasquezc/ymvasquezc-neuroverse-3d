@@ -12,6 +12,64 @@ export interface CuratedInfo {
 }
 
 export const CURATED_DESCRIPTIONS: Readonly<Record<string, CuratedInfo>> = {
+  // Córtex (estructuras frecuentes)
+  Hippocampus: {
+    description:
+      'Hipocampo. Estructura del lóbulo temporal medial esencial para la formación ' +
+      'de la memoria y la navegación espacial.',
+    functions: ['Memoria', 'Navegación espacial'],
+  },
+  'Precentral gyrus': {
+    description:
+      'Giro precentral. Sede de la corteza motora primaria; origina el control ' +
+      'voluntario del movimiento.',
+    functions: ['Corteza motora primaria', 'Movimiento voluntario'],
+  },
+  'Postcentral gyrus': {
+    description:
+      'Giro poscentral. Corteza somatosensorial primaria; procesa el tacto, la ' +
+      'presión y la propiocepción.',
+    functions: ['Corteza somatosensorial', 'Tacto', 'Propiocepción'],
+  },
+  'Superior temporal gyrus (Lateral part)': {
+    description:
+      'Giro temporal superior. Contiene la corteza auditiva y el área de Wernicke, ' +
+      'clave para la comprensión del lenguaje.',
+    functions: ['Audición', 'Comprensión del lenguaje'],
+  },
+  'Transverse temporal gyri': {
+    description:
+      'Giros temporales transversos (de Heschl). Corteza auditiva primaria.',
+    functions: ['Corteza auditiva primaria'],
+  },
+  'Opercular part of inferior frontal gyrus': {
+    description:
+      'Parte del giro frontal inferior que, junto a la parte triangular, forma el ' +
+      'área de Broca, implicada en la producción del lenguaje.',
+    functions: ['Producción del lenguaje (Broca)'],
+  },
+  'Triangular part of inferior frontal gyrus': {
+    description:
+      'Parte triangular del giro frontal inferior; componente del área de Broca.',
+    functions: ['Producción del lenguaje (Broca)'],
+  },
+  'Cingulate gyrus (Posteroventral part)': {
+    description:
+      'Giro del cíngulo. Parte del sistema límbico; interviene en la emoción, la ' +
+      'atención y la regulación autónoma.',
+    functions: ['Emoción', 'Atención'],
+  },
+  Precuneus: {
+    description:
+      'Precuña. Región parietal medial asociada a la conciencia de uno mismo, la ' +
+      'imaginería visual y la memoria episódica.',
+    functions: ['Autoconciencia', 'Memoria episódica'],
+  },
+  Cuneus: {
+    description: 'Cuña. Región occipital medial implicada en el procesamiento visual básico.',
+    functions: ['Procesamiento visual'],
+  },
+
   // Cerebelo
   'Tonsil of cerebellum': {
     description:

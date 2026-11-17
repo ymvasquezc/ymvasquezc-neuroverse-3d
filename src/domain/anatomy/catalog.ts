@@ -7,6 +7,7 @@ import type {
 import type { BrainManifest } from './manifest';
 import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from './manifest';
 import { CURATED_DESCRIPTIONS } from './descriptions';
+import { translateLabel, translateCategory } from './translations';
 
 /* ------------------------------------------------------------------ *
  * Catálogo placeholder (respaldo de Fase 1)
@@ -120,17 +121,20 @@ export function buildCatalogFromManifest(manifest: BrainManifest): {
 } {
   const list: AnatomicalStructure[] = manifest.nodes.map((node) => {
     const color = CATEGORY_COLORS[node.category] ?? DEFAULT_CATEGORY_COLOR;
+    // Las descripciones curadas se indexan por la etiqueta inglesa del manifest.
     const curated = CURATED_DESCRIPTIONS[node.label];
+    const nameEs = translateLabel(node.label);
     return {
       id: node.name, // el nombre del nodo es único y estable
-      name: node.label + sideSuffix(node.side),
+      name: nameEs + sideSuffix(node.side),
       category: node.category,
       side: node.side,
       description: curated?.description ?? '',
       functions: curated?.functions ?? [],
       highlightColor: color,
       meshNames: [node.name],
-      ta2Path: node.ta2,
+      // Traduce cada término de la ruta TA2 cuando hay equivalente conocido.
+      ta2Path: node.ta2.map((t) => translateLabel(t)),
       source: node.source ?? 'Z-Anatomy / BodyParts3D',
       isPlaceholderGeometry: false,
     };
@@ -141,7 +145,7 @@ export function buildCatalogFromManifest(manifest: BrainManifest): {
   const categories: CategoryInfo[] = Object.entries(manifest.categories).map(
     ([key, info]) => ({
       key: key as AnatomicalCategory,
-      label: info.label,
+      label: translateCategory(key, info.label),
       count: info.count,
       color: CATEGORY_COLORS[key as AnatomicalCategory] ?? DEFAULT_CATEGORY_COLOR,
     }),

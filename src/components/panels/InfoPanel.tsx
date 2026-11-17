@@ -13,6 +13,9 @@ export function InfoPanel() {
   const { selectedStructureId, usingPlaceholder, structures, categories } =
     useAppState();
   const structure = getActiveStructure(selectedStructureId);
+  const structureCategory = structure
+    ? categories.find((c) => c.key === structure.category)
+    : undefined;
 
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<AnatomicalCategory | 'all'>(
@@ -40,12 +43,17 @@ export function InfoPanel() {
             {structure.name}
           </h2>
 
+          {structureCategory && (
+            <div className="nv-latin">{structureCategory.label}</div>
+          )}
+
           {structure.description ? (
             <p>{structure.description}</p>
           ) : (
             <p className="nv-empty">
-              Sin descripción curada para esta estructura. Se muestran únicamente
-              los metadatos objetivos del modelo (no se genera texto inventado).
+              Aún no hay una descripción ampliada para esta estructura. A
+              continuación se muestran su clasificación anatómica (TA2) y la fuente
+              del modelo. No se genera texto inventado.
             </p>
           )}
 

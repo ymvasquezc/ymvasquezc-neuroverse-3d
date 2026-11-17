@@ -63,6 +63,9 @@ export function useBrainModel(): BrainModelResult {
         // 4) Puebla el catálogo del dominio desde el manifest.
         const { catalog, list, categories } = buildCatalogFromManifest(manifest);
         actions.setCatalog(catalog, list, categories);
+
+        // 5) Colorea cada estructura por su categoría (atlas por sistemas).
+        applyCategoryColors(scene, catalog);
         actions.setUsingPlaceholder(false);
         actions.setModelStatus('ready');
 
@@ -98,6 +101,34 @@ function annotateStructureIds(root: THREE.Object3D): void {
     if ((obj as THREE.Mesh).isMesh && obj.name) {
       obj.userData.structureId = obj.name;
     }
+  });
+}
+
+/**
+ * Tiñe el material base de cada mesh con el color de su categoría, para que el
+ * modelo se lea como un atlas por sistemas (el GLB original trae tonos marrones
+ * poco distinguibles sobre fondo oscuro). Clona el material por mesh para no
+ * afectar a otros que compartan el mismo material.
+ */
+function applyCategoryColors(
+  root: THREE.Object3D,
+  catalog: ReadonlyMap<string, { highlightColor: string }>,
+): void {
+  root.traverse((obj) => {
+    const mesh = obj as THREE.Mesh;
+    if (!mesh.isMesh || Array.isArray(mesh.material)) return;
+    const id = mesh.userData.structureId as string | undefined;
+    const entry = id ? catalog.get(id) : undefined;
+    if (!entry) return;
+
+    const mat = (mesh.material as THREE.MeshStandardMaterial).clone();
+    mat.color = new THREE.Color(entry.highlightColor);
+    mat.metalness = 0.1;
+    mat.roughness = 0.6;
+    mat.userData.cloned = true;
+    mat.userData.baseEmissive = new THREE.Color('#000000');
+    mat.userData.baseEmissiveIntensity = 0;
+    mesh.material = mat;
   });
 }
 
