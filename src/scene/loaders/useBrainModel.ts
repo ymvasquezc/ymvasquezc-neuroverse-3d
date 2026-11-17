@@ -95,12 +95,20 @@ export function useBrainModel(): BrainModelResult {
   return result;
 }
 
-/** Copia `node.name` a `userData.structureId` en todos los meshes. */
+/**
+ * Asigna `userData.structureId` a cada mesh con el NOMBRE ORIGINAL del nodo.
+ *
+ * GLTFLoader "sanea" `object.name` (quita puntos y reemplaza espacios por `_`),
+ * por lo que NO coincide con los ids del manifest (p. ej. "Abducens nerve (VI).l").
+ * El loader conserva el nombre original en `object.userData.name`; lo usamos como
+ * id para que el enlace con el catálogo sea exacto.
+ */
 function annotateStructureIds(root: THREE.Object3D): void {
   root.traverse((obj) => {
-    if ((obj as THREE.Mesh).isMesh && obj.name) {
-      obj.userData.structureId = obj.name;
-    }
+    if (!(obj as THREE.Mesh).isMesh) return;
+    const original = obj.userData.name as string | undefined;
+    const id = original ?? obj.name;
+    if (id) obj.userData.structureId = id;
   });
 }
 
@@ -121,13 +129,21 @@ function applyCategoryColors(
     const entry = id ? catalog.get(id) : undefined;
     if (!entry) return;
 
-    const mat = (mesh.material as THREE.MeshStandardMaterial).clone();
-    mat.color = new THREE.Color(entry.highlightColor);
-    mat.metalness = 0.1;
-    mat.roughness = 0.6;
+    // Sustituye el material físico del GLB (specular/IOR, que lo vuelve blanco
+    // y lustroso) por un Standard mate teñido con el color de la categoría.
+    const src = mesh.material as THREE.MeshStandardMaterial;
+    const mat = new THREE.MeshStandardMaterial({
+      color: new THREE.Color(entry.highlightColor),
+      metalness: 0.05,
+      roughness: 0.75,
+      transparent: src.transparent,
+      opacity: src.opacity,
+      side: src.side,
+    });
     mat.userData.cloned = true;
     mat.userData.baseEmissive = new THREE.Color('#000000');
     mat.userData.baseEmissiveIntensity = 0;
+    src.dispose();
     mesh.material = mat;
   });
 }
