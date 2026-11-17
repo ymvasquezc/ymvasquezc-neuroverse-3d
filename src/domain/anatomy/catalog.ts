@@ -1,106 +1,151 @@
-import type { AnatomicalStructure, AnatomyCatalog } from './types';
+import type {
+  AnatomicalCategory,
+  AnatomicalStructure,
+  AnatomyCatalog,
+  CategoryInfo,
+} from './types';
+import type { BrainManifest } from './manifest';
+import { CATEGORY_COLORS, DEFAULT_CATEGORY_COLOR } from './manifest';
+import { CURATED_DESCRIPTIONS } from './descriptions';
+
+/* ------------------------------------------------------------------ *
+ * Catálogo placeholder (respaldo de Fase 1)
+ * ------------------------------------------------------------------ */
 
 /**
- * Catálogo de estructuras de la Fase 1.
- *
  * AVISO DE INTEGRIDAD CIENTÍFICA
  * ------------------------------
- * Las geometrías asociadas en esta fase son MARCADORES DE POSICIÓN
- * (`isPlaceholderGeometry: true`). Su posición, forma y tamaño son aproximaciones
- * esquemáticas pensadas para probar la infraestructura de selección y el panel
- * informativo; NO son reconstrucciones anatómicas verificadas. Los textos
- * descriptivos son correctos a nivel educativo general, pero la representación
- * espacial se sustituirá por modelos segmentados y citados en fases posteriores.
+ * Este catálogo describe el cerebro ESQUEMÁTICO de respaldo. Se usa solo cuando
+ * el modelo real (`public/models/brain.glb`) no está disponible. Sus geometrías
+ * son marcadores de posición (`isPlaceholderGeometry: true`).
  */
-const STRUCTURES: readonly AnatomicalStructure[] = [
+const PLACEHOLDER_STRUCTURES: readonly AnatomicalStructure[] = [
   {
     id: 'frontal-lobe',
     name: 'Lóbulo frontal',
-    latinName: 'Lobus frontalis',
-    system: 'cerebrum',
+    category: 'cortex',
+    side: 'median',
     description:
       'Región anterior de la corteza cerebral. Participa en funciones ejecutivas, ' +
-      'planificación, control motor voluntario y aspectos del lenguaje y la personalidad.',
+      'planificación, control motor voluntario y lenguaje.',
     functions: ['Funciones ejecutivas', 'Planificación', 'Control motor', 'Lenguaje (Broca)'],
-    highlightColor: '#4fd1ff',
+    highlightColor: CATEGORY_COLORS.cortex,
     meshNames: ['frontal-lobe'],
     isPlaceholderGeometry: true,
   },
   {
     id: 'parietal-lobe',
     name: 'Lóbulo parietal',
-    latinName: 'Lobus parietalis',
-    system: 'cerebrum',
-    description:
-      'Procesa información somatosensorial, integración espacial y coordinación ' +
-      'sensoriomotora.',
-    functions: ['Somatosensorial', 'Orientación espacial', 'Integración sensorial'],
-    highlightColor: '#64ffda',
+    category: 'cortex',
+    side: 'median',
+    description: 'Procesa información somatosensorial e integración espacial.',
+    functions: ['Somatosensorial', 'Orientación espacial'],
+    highlightColor: CATEGORY_COLORS.cortex,
     meshNames: ['parietal-lobe'],
     isPlaceholderGeometry: true,
   },
   {
     id: 'temporal-lobe',
     name: 'Lóbulo temporal',
-    latinName: 'Lobus temporalis',
-    system: 'cerebrum',
-    description:
-      'Relacionado con la audición, el procesamiento del lenguaje (Wernicke) y la ' +
-      'memoria a través de estructuras limbicas vecinas.',
+    category: 'cortex',
+    side: 'median',
+    description: 'Relacionado con la audición, el lenguaje (Wernicke) y la memoria.',
     functions: ['Audición', 'Comprensión del lenguaje', 'Memoria'],
-    highlightColor: '#b388ff',
+    highlightColor: CATEGORY_COLORS.cortex,
     meshNames: ['temporal-lobe'],
     isPlaceholderGeometry: true,
   },
   {
     id: 'occipital-lobe',
     name: 'Lóbulo occipital',
-    latinName: 'Lobus occipitalis',
-    system: 'cerebrum',
-    description:
-      'Alberga la corteza visual primaria; procesa e interpreta la información visual.',
-    functions: ['Procesamiento visual', 'Reconocimiento de formas y color'],
-    highlightColor: '#ffd54f',
+    category: 'cortex',
+    side: 'median',
+    description: 'Alberga la corteza visual primaria; procesa la información visual.',
+    functions: ['Procesamiento visual'],
+    highlightColor: CATEGORY_COLORS.cortex,
     meshNames: ['occipital-lobe'],
     isPlaceholderGeometry: true,
   },
   {
     id: 'cerebellum',
     name: 'Cerebelo',
-    latinName: 'Cerebellum',
-    system: 'cerebellum',
-    description:
-      'Coordina el movimiento, el equilibrio y el tono muscular; interviene en el ' +
-      'aprendizaje motor.',
-    functions: ['Coordinación motora', 'Equilibrio', 'Aprendizaje motor'],
-    highlightColor: '#ff8a65',
+    category: 'cerebellum',
+    side: 'median',
+    description: 'Coordina el movimiento, el equilibrio y el tono muscular.',
+    functions: ['Coordinación motora', 'Equilibrio'],
+    highlightColor: CATEGORY_COLORS.cerebellum,
     meshNames: ['cerebellum'],
     isPlaceholderGeometry: true,
   },
   {
     id: 'brainstem',
     name: 'Tronco encefálico',
-    latinName: 'Truncus encephali',
-    system: 'brainstem',
+    category: 'brainstem',
+    side: 'median',
     description:
-      'Conecta el cerebro con la médula espinal. Regula funciones vitales autónomas ' +
-      'como la respiración, el ritmo cardíaco y el nivel de alerta.',
-    functions: ['Respiración', 'Ritmo cardíaco', 'Reflejos', 'Alerta'],
-    highlightColor: '#f06292',
+      'Conecta el cerebro con la médula espinal. Regula funciones vitales como la ' +
+      'respiración y el ritmo cardíaco.',
+    functions: ['Respiración', 'Ritmo cardíaco', 'Alerta'],
+    highlightColor: CATEGORY_COLORS.brainstem,
     meshNames: ['brainstem'],
     isPlaceholderGeometry: true,
   },
 ];
 
-/** Construye el catálogo indexado una sola vez. */
-export const ANATOMY_CATALOG: AnatomyCatalog = new Map(
-  STRUCTURES.map((s) => [s.id, s]),
+export const PLACEHOLDER_CATALOG: AnatomyCatalog = new Map(
+  PLACEHOLDER_STRUCTURES.map((s) => [s.id, s]),
 );
+export const PLACEHOLDER_LIST: readonly AnatomicalStructure[] = PLACEHOLDER_STRUCTURES;
 
-/** Lista inmutable de estructuras en orden de declaración. */
-export const ANATOMY_LIST: readonly AnatomicalStructure[] = STRUCTURES;
+/* ------------------------------------------------------------------ *
+ * Catálogo real (generado desde el manifest del modelo GLB)
+ * ------------------------------------------------------------------ */
 
-/** Devuelve el metadato de una estructura por id, o `undefined`. */
-export function getStructure(id: string | null): AnatomicalStructure | undefined {
-  return id ? ANATOMY_CATALOG.get(id) : undefined;
+/** Sufijo de lateralidad legible. */
+function sideSuffix(side: AnatomicalStructure['side']): string {
+  if (side === 'left') return ' (izq.)';
+  if (side === 'right') return ' (der.)';
+  return '';
+}
+
+/**
+ * Construye el catálogo de dominio a partir del manifest del modelo real.
+ * Cada estructura es `isPlaceholderGeometry: false` porque deriva de datos reales
+ * (Z-Anatomy / BodyParts3D). Las descripciones curadas se aplican por `label`.
+ */
+export function buildCatalogFromManifest(manifest: BrainManifest): {
+  catalog: AnatomyCatalog;
+  list: readonly AnatomicalStructure[];
+  categories: readonly CategoryInfo[];
+} {
+  const list: AnatomicalStructure[] = manifest.nodes.map((node) => {
+    const color = CATEGORY_COLORS[node.category] ?? DEFAULT_CATEGORY_COLOR;
+    const curated = CURATED_DESCRIPTIONS[node.label];
+    return {
+      id: node.name, // el nombre del nodo es único y estable
+      name: node.label + sideSuffix(node.side),
+      category: node.category,
+      side: node.side,
+      description: curated?.description ?? '',
+      functions: curated?.functions ?? [],
+      highlightColor: color,
+      meshNames: [node.name],
+      ta2Path: node.ta2,
+      source: node.source ?? 'Z-Anatomy / BodyParts3D',
+      isPlaceholderGeometry: false,
+    };
+  });
+
+  const catalog: AnatomyCatalog = new Map(list.map((s) => [s.id, s]));
+
+  const categories: CategoryInfo[] = Object.entries(manifest.categories).map(
+    ([key, info]) => ({
+      key: key as AnatomicalCategory,
+      label: info.label,
+      count: info.count,
+      color: CATEGORY_COLORS[key as AnatomicalCategory] ?? DEFAULT_CATEGORY_COLOR,
+    }),
+  );
+
+  return { catalog, list, categories };
 }

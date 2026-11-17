@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { ANATOMY_LIST } from '../../domain/anatomy/catalog';
+import { PLACEHOLDER_LIST } from '../../domain/anatomy/catalog';
 
 /**
  * Genera un cerebro ESQUEMÁTICO de respaldo (placeholder).
@@ -89,7 +89,7 @@ export function createProceduralBrain(): THREE.Group {
     const id = o.userData?.structureId as string | undefined;
     if (id) present.add(id);
   });
-  for (const s of ANATOMY_LIST) {
+  for (const s of PLACEHOLDER_LIST) {
     if (!present.has(s.id)) {
       console.warn(
         `[proceduralBrain] Estructura "${s.id}" del catálogo sin mesh asociado.`,

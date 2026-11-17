@@ -1,0 +1,22 @@
+MODELO 3D — brain.glb
+=====================
+
+Este modelo deriva de Z-Anatomy y BodyParts3D y se distribuye bajo
+Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
+
+Atribución requerida (mantener junto a cualquier copia o derivado):
+
+    "BodyParts3D - The Database Center for Life Science - CC-BY-SA 2.1 Japan"
+    "Z-Anatomy - The open source atlas of anatomy - CC-BY-SA 4.0"
+
+Fuentes:
+    - Z-Anatomy / BodyParts3D (DBCLS).
+    - GLB preconvertido obtenido de: https://github.com/itayinbarr/brainproject
+      (assets 3D bajo CC BY-SA 4.0; el código de ese repositorio, Apache-2.0, no se usa).
+
+LIMITACIONES CIENTÍFICAS
+    Modelo de nivel ilustrativo / anatomía macroscópica. Algunas estructuras
+    profundas provienen de registro con atlas de imagen y son APROXIMADAS (~7 mm).
+    Uso EDUCATIVO; NO es una herramienta clínica.
+
+Ver también: ../../LICENSE y ../../ATTRIBUTION.md en la raíz del proyecto.

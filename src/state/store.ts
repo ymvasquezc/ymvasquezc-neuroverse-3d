@@ -5,6 +5,12 @@
  * estructura seleccionada y el estado de carga del modelo 3D.
  */
 import { useSyncExternalStore } from 'react';
+import type {
+  AnatomyCatalog,
+  AnatomicalStructure,
+  CategoryInfo,
+} from '../domain/anatomy/types';
+import { PLACEHOLDER_CATALOG, PLACEHOLDER_LIST } from '../domain/anatomy/catalog';
 
 /** Fases de carga del modelo 3D. */
 export type ModelStatus = 'idle' | 'loading' | 'ready' | 'error';
@@ -22,6 +28,12 @@ export interface AppState {
   readonly loadError: string | null;
   /** Indica si el modelo mostrado es un placeholder no verificado. */
   readonly usingPlaceholder: boolean;
+  /** Catálogo activo (placeholder o real), indexado por id. */
+  readonly catalog: AnatomyCatalog;
+  /** Lista del catálogo activo en orden de declaración. */
+  readonly structures: readonly AnatomicalStructure[];
+  /** Categorías disponibles (vacío en modo placeholder). */
+  readonly categories: readonly CategoryInfo[];
 }
 
 const initialState: AppState = {
@@ -31,6 +43,9 @@ const initialState: AppState = {
   loadProgress: 0,
   loadError: null,
   usingPlaceholder: true,
+  catalog: PLACEHOLDER_CATALOG,
+  structures: PLACEHOLDER_LIST,
+  categories: [],
 };
 
 let state: AppState = initialState;
@@ -73,7 +88,29 @@ export const actions = {
   setUsingPlaceholder(value: boolean): void {
     setState({ usingPlaceholder: value });
   },
+  /** Reemplaza el catálogo activo (al cargar el modelo real). */
+  setCatalog(
+    catalog: AnatomyCatalog,
+    structures: readonly AnatomicalStructure[],
+    categories: readonly CategoryInfo[],
+  ): void {
+    setState({ catalog, structures, categories });
+  },
+  /** Vuelve al catálogo placeholder (fallback). */
+  useFallbackCatalog(): void {
+    setState({
+      catalog: PLACEHOLDER_CATALOG,
+      structures: PLACEHOLDER_LIST,
+      categories: [],
+      usingPlaceholder: true,
+    });
+  },
 } as const;
+
+/** Devuelve el metadato de la estructura seleccionada desde el catálogo activo. */
+export function getActiveStructure(id: string | null): AnatomicalStructure | undefined {
+  return id ? state.catalog.get(id) : undefined;
+}
 
 /* ---- Hooks ---- */
 

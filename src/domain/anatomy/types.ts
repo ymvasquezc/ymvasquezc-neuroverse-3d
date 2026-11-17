@@ -5,43 +5,69 @@
  * de verdad que consumen tanto la UI como la escena 3D.
  */
 
-/** Grandes divisiones anatómicas usadas para agrupar y colorear estructuras. */
-export type AnatomicalSystem =
-  | 'cerebrum'
+/**
+ * Categorías del modelo real (derivadas del manifest de Z-Anatomy/BodyParts3D).
+ * Agrupan las estructuras y determinan su color de resaltado.
+ */
+export type AnatomicalCategory =
+  | 'cortex'
   | 'cerebellum'
   | 'brainstem'
   | 'diencephalon'
-  | 'limbic';
+  | 'deep_grey'
+  | 'tracts'
+  | 'white_matter'
+  | 'arteries'
+  | 'veins_sinuses'
+  | 'ventricles'
+  | 'cranial_nerves'
+  | 'meninges_dura';
+
+/** Lateralidad anatómica. */
+export type AnatomicalSide = 'left' | 'right' | 'median';
 
 /**
  * Metadato de una estructura anatómica.
  *
- * `meshNames` enlaza el dato con uno o más meshes del modelo 3D (por `name` o por
- * `userData.structureId`). Permite que un mismo registro informe varios meshes.
+ * `meshNames` enlaza el dato con uno o más meshes del modelo 3D. Para el modelo
+ * real, cada `meshName` coincide exactamente con el `name` del nodo en el GLB.
  */
 export interface AnatomicalStructure {
-  /** Identificador estable, en minúsculas y con guiones. */
+  /** Identificador estable. */
   readonly id: string;
-  /** Nombre para mostrar (español). */
+  /** Nombre para mostrar. */
   readonly name: string;
-  /** Nombre latino/científico, cuando aplica. */
-  readonly latinName?: string;
-  /** Sistema o división a la que pertenece. */
-  readonly system: AnatomicalSystem;
-  /** Descripción breve y funcional. */
+  /** Categoría/división a la que pertenece. */
+  readonly category: AnatomicalCategory;
+  /** Lateralidad. */
+  readonly side: AnatomicalSide;
+  /** Descripción breve (educativa). Puede estar vacía si el modelo no la aporta. */
   readonly description: string;
   /** Funciones principales atribuidas (resumen educativo). */
   readonly functions: readonly string[];
   /** Color de resaltado en formato hex (#rrggbb). */
   readonly highlightColor: string;
-  /** Nombres de mesh asociados en el modelo 3D. */
+  /** Nombres de mesh asociados en el modelo 3D (coinciden con `node.name`). */
   readonly meshNames: readonly string[];
+  /** Ruta jerárquica TA2 (Terminologia Anatomica), si está disponible. */
+  readonly ta2Path?: readonly string[];
+  /** Procedencia del dato/geometría (p. ej. "Z-Anatomy / BodyParts3D"). */
+  readonly source?: string;
   /**
-   * Indica si la representación 3D es un marcador de posición (placeholder) y no
-   * un modelo anatómicamente verificado. Obligatorio para la honestidad científica.
+   * `true` si la geometría es un marcador de posición esquemático y NO una
+   * representación anatómica derivada de datos reales. Obligatorio para la
+   * honestidad científica.
    */
   readonly isPlaceholderGeometry: boolean;
 }
 
 /** Catálogo indexado por id de estructura. */
 export type AnatomyCatalog = ReadonlyMap<string, AnatomicalStructure>;
+
+/** Metadato de una categoría (etiqueta legible + recuento). */
+export interface CategoryInfo {
+  readonly key: AnatomicalCategory;
+  readonly label: string;
+  readonly count: number;
+  readonly color: string;
+}

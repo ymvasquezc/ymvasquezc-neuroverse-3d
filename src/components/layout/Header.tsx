@@ -6,7 +6,7 @@ export function Header() {
         <h1>NEUROVERSE&nbsp;3D</h1>
         <span className="nv-sub">Exploración tridimensional del cerebro humano</span>
       </div>
-      <span className="nv-badge">Fase 1 · Visualizador</span>
+      <span className="nv-badge">Fase 2 · Modelo anatómico</span>
     </header>
   );
 }

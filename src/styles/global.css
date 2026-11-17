@@ -268,3 +268,114 @@ body {
     display: none;
   }
 }
+
+/* --- Buscador y chips de categoría (Fase 2) --- */
+.nv-search {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 4px 0 10px;
+  border-radius: var(--nv-radius-sm);
+  border: 1px solid var(--nv-panel-border);
+  background: rgba(5, 7, 15, 0.5);
+  color: var(--nv-text);
+  font-size: 13px;
+}
+.nv-search::placeholder {
+  color: var(--nv-text-dim);
+}
+.nv-search:focus {
+  outline: none;
+  border-color: var(--nv-accent);
+}
+
+.nv-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.nv-chip {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--nv-panel-border);
+  background: transparent;
+  color: var(--nv-text-dim);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.nv-chip:hover {
+  color: var(--nv-text);
+}
+.nv-chip[aria-pressed='true'] {
+  background: rgba(79, 209, 255, 0.12);
+  border-color: var(--nv-accent);
+  color: var(--nv-text);
+}
+
+.nv-ta2 {
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--nv-text-dim);
+  background: rgba(5, 7, 15, 0.4);
+  padding: 8px 10px;
+  border-radius: var(--nv-radius-sm);
+  border: 1px solid var(--nv-panel-border);
+}
+.nv-source {
+  font-size: 11px;
+  color: var(--nv-text-dim);
+  margin: 8px 0 0;
+}
+
+/* --- Panel de atribución --- */
+.nv-attribution {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 4;
+  max-width: min(340px, calc(100vw - 32px));
+}
+.nv-attr-toggle {
+  font-size: 12px;
+  padding: 7px 12px;
+  border-radius: var(--nv-radius-sm);
+  border: 1px solid var(--nv-panel-border);
+  background: var(--nv-panel);
+  color: var(--nv-text-dim);
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+.nv-attr-toggle:hover {
+  color: var(--nv-text);
+}
+.nv-attr-body {
+  margin-top: 8px;
+  padding: 14px 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  background: var(--nv-panel);
+  border: 1px solid var(--nv-panel-border);
+  border-radius: var(--nv-radius);
+  box-shadow: var(--nv-shadow);
+  backdrop-filter: blur(12px);
+}
+.nv-attr-body a {
+  color: var(--nv-accent);
+}
+.nv-attr-body code {
+  font-family: var(--nv-font-mono);
+  font-size: 11px;
+  background: rgba(5, 7, 15, 0.5);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .nv-attribution {
+    top: auto;
+    bottom: calc(48% + 24px);
+  }
+}

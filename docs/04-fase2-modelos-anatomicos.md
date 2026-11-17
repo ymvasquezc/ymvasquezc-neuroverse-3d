@@ -21,30 +21,33 @@ abierto. **No** se incorporarán:
 - Riñón — CC-BY-NC 4.0 (no comercial).
 Solo usamos las estructuras **cerebrales** derivadas de BodyParts3D/Brainder (CC-BY-SA).
 
-## 3. Restricción del entorno
+## 3. Asset elegido (Opción B: GLB ya convertido)
 
-- El asset (`Z-Anatomy.zip`, ~87 MB) es un proyecto **Blender**; su conversión a
-  GLB requiere Blender, que no está disponible en el sandbox.
-- **Reparto de trabajo:** la descarga y conversión pesada se hace en local (script
-  provisto). La integración en la app, el mapeo de estructuras, la UI de atribución
-  y la optimización de carga se implementan en el repositorio.
+En lugar de convertir el proyecto Blender de Z-Anatomy manualmente (que requiere
+Blender), se usó un **GLB ya convertido y publicado bajo CC BY-SA 4.0** derivado de
+Z-Anatomy/BodyParts3D:
 
-## 4. Pipeline de conversión (local, documentado)
+- **Fuente:** `itayinbarr/brainproject` → `brain-atlas/models/brain.glb` + `manifest.json`.
+- **Licencia de los assets 3D:** CC BY-SA 4.0 (compatible). El código del repo
+  origen es Apache-2.0 y NO se usa.
+- **Contenido:** 437 estructuras con nombre TA2, en 12 categorías. GLB de 4.65 MB,
+  comprimido con **Draco** (`KHR_draco_mesh_compression`), generado con glTF-Transform.
+- **Verificación:** los 437 nombres de nodo del GLB coinciden 1:1 con los `name` del
+  manifest, lo que garantiza el mapeo de selección.
 
-1. Descargar `Z-Anatomy.zip` del repositorio oficial.
-2. Abrir en Blender (como *Application Template*, según su README).
-3. Aislar la colección del sistema nervioso central (encéfalo) y eliminar capas no
-   usadas y los modelos con licencia NC.
-4. Verificar que **cada estructura es un objeto independiente con nombre TA2**.
-5. Exportar a **GLB** (glTF 2.0 binario) con:
-   - Nombres de objeto preservados (se usarán como `userData.structureId`).
-   - Draco activado (compresión de malla) para reducir tamaño.
-   - Sin cámaras/luces; transformadas aplicadas.
-6. Optimizar con `gltf-transform` (dedup, prune, cuantización) → `brain.glb`.
-7. Colocar en `public/models/brain.glb` + decodificador Draco en `public/draco/`.
+Se descartó `nqwrc/3d-anatomy` (mismo stack) por estar bajo CC BY-NC-SA (no comercial),
+incompatible con la licencia del proyecto.
 
-Se provee `scripts/convert-brain.sh` (orquestación) y `scripts/blender_export.py`
-(script de Blender) para reproducir el proceso.
+## 4. Assets en el repositorio
+
+- `public/models/brain.glb` — modelo Draco-comprimido.
+- `public/models/manifest.json` — metadatos por estructura (id, label, category,
+  side, ta2, source).
+- `public/draco/` — decodificador Draco (copiado de three.js) para `DRACOLoader`.
+
+El catálogo de dominio se **genera desde el manifest** en tiempo de ejecución
+(`buildCatalogFromManifest`), de modo que la capa de dominio refleja fielmente el
+modelo real sin mantenimiento manual de 437 entradas.
 
 ## 5. Cambios en la aplicación
 
@@ -59,17 +62,28 @@ Se provee `scripts/convert-brain.sh` (orquestación) y `scripts/blender_export.p
 
 ## 6. Plan de tareas (Fase 2)
 
-- [ ] T1. Documentar pipeline + scripts de conversión (Blender + gltf-transform).
-- [ ] T2. Infraestructura de assets: `public/models/`, `public/draco/`, carga Draco.
-- [ ] T3. Hook/estado de carga del GLB con progreso y fallback a procedural.
-- [ ] T4. Tabla de mapeo TA2 → catálogo de dominio; ampliar estructuras.
-- [ ] T5. Conectar selección/resaltado a los meshes reales del GLB.
-- [ ] T6. Panel de atribución y licencia (CC BY-SA) + archivo ATTRIBUTION.md.
-- [ ] T7. Optimización de carga (Draco, LOD opcional, encuadre de cámara).
-- [ ] T8. Verificación: build/typecheck/lint + prueba con y sin asset presente.
+- [x] T1. Seleccionar y verificar asset GLB CC BY-SA (licencia + mapeo de nombres).
+- [x] T2. Infraestructura de assets: `public/models/`, `public/draco/`, carga Draco.
+- [x] T3. Hook/estado de carga del GLB con progreso y fallback a procedural.
+- [x] T4. Catálogo de dominio generado desde el manifest (categorías, lateralidad, TA2).
+- [x] T5. Conectar selección/resaltado a los meshes reales del GLB (clonado de material).
+- [x] T6. Panel de atribución y licencia (CC BY-SA) + `ATTRIBUTION.md` + `LICENSE`.
+- [x] T7. Encuadre automático del modelo (centrado + escala a la cámara).
+- [x] T8. Verificación: build/typecheck/lint + validación de mapeo nombres.
 
 ## 7. Criterio de "hecho"
 
 Con `public/models/brain.glb` presente, la app carga el modelo real, permite
 seleccionar estructuras reales nombradas y muestra atribución. Sin el asset, cae
 limpiamente al placeholder etiquetado. Build/typecheck/lint sin errores.
+
+## 8. Resultado de verificación
+
+- `npm run typecheck`: 0 errores.
+- `npm run lint`: 0 warnings, 0 errores (se excluyen assets vendored de `public/`).
+- `npm run build`: OK; GLB (4.65 MB), manifest y decodificador Draco copiados a `dist/`.
+- Mapeo de nombres GLB ↔ manifest: 437/437 coincidencias.
+- Limitación: no fue posible renderizar en navegador desde el sandbox (sin browser),
+  ni decodificar Draco en Node (los loaders requieren entorno de navegador). La
+  validación se apoya en el build, el typecheck, el lint y la verificación estructural
+  del GLB. Conviene una comprobación visual final en navegador al desplegar.

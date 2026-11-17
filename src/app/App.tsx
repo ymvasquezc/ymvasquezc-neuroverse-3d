@@ -1,5 +1,6 @@
 import { Header } from '../components/layout/Header';
 import { InfoPanel } from '../components/panels/InfoPanel';
+import { AttributionPanel } from '../components/panels/AttributionPanel';
 import { StatusOverlay } from '../components/ui/StatusOverlay';
 import { ErrorBoundary } from '../components/ui/ErrorBoundary';
 import { Viewer } from '../scene/Viewer';
@@ -23,6 +24,7 @@ export function App() {
           </ErrorBoundary>
         </div>
         <StatusOverlay />
+        <AttributionPanel />
         <InfoPanel />
         <div className="nv-hint">
           Arrastrar: rotar · Rueda: zoom · Clic derecho + arrastrar: desplazar
